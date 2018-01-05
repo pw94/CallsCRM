@@ -1,0 +1,37 @@
+@model CallsCRM.Models.Caller
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+
+<div>
+    <h4>Caller</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Login)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Login)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.CallerId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+</div>
