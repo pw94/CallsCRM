@@ -47,9 +47,9 @@ namespace CallsCRM.Controllers
         }
 
         // GET: Call/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "Email");
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "FullName", id);
             ViewData["CallerId"] = new SelectList(_context.Callers, "CallerId", "Login");
             return View();
         }
