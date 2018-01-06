@@ -42,6 +42,7 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
+                <a asp-controller="Call" asp-action="Create" asp-route-id="@item.CustomerId">Call</a> |
                 <a asp-action="Edit" asp-route-id="@item.CustomerId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.CustomerId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.CustomerId">Delete</a>
