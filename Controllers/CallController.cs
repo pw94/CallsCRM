@@ -26,9 +26,10 @@ namespace CallsCRM.Controllers
         }
 
         // GET: Call/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet("Details/{id}/{customerId}")]
+        public async Task<IActionResult> Details(int? id, int? customerId)
         {
-            if (id == null)
+            if (id == null || customerId == null)
             {
                 return NotFound();
             }
@@ -36,7 +37,7 @@ namespace CallsCRM.Controllers
             var call = await _context.Calls
                 .Include(c => c.Callee)
                 .Include(c => c.Caller)
-                .SingleOrDefaultAsync(m => m.CallerId == id);
+                .SingleOrDefaultAsync(m => m.CallerId == id && m.CustomerId == customerId);
             if (call == null)
             {
                 return NotFound();
@@ -60,6 +61,7 @@ namespace CallsCRM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomerId,CallerId")] Call call)
         {
+            call.Time = new CallTime();
             if (ModelState.IsValid)
             {
                 _context.Add(call);
@@ -71,65 +73,11 @@ namespace CallsCRM.Controllers
             return View(call);
         }
 
-        // GET: Call/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var call = await _context.Calls.SingleOrDefaultAsync(m => m.CallerId == id);
-            if (call == null)
-            {
-                return NotFound();
-            }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "Email", call.CustomerId);
-            ViewData["CallerId"] = new SelectList(_context.Callers, "CallerId", "Login", call.CallerId);
-            return View(call);
-        }
-
-        // POST: Call/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerId,CallerId")] Call call)
-        {
-            if (id != call.CallerId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(call);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CallExists(call.CallerId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "Email", call.CustomerId);
-            ViewData["CallerId"] = new SelectList(_context.Callers, "CallerId", "Login", call.CallerId);
-            return View(call);
-        }
-
         // GET: Call/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpGet("Delete/{id}/{customerId}")]
+        public async Task<IActionResult> Delete(int? id, int? customerId)
         {
-            if (id == null)
+            if (id == null || customerId == null)
             {
                 return NotFound();
             }
@@ -137,7 +85,7 @@ namespace CallsCRM.Controllers
             var call = await _context.Calls
                 .Include(c => c.Callee)
                 .Include(c => c.Caller)
-                .SingleOrDefaultAsync(m => m.CallerId == id);
+                .SingleOrDefaultAsync(m => m.CallerId == id && m.CustomerId == customerId);
             if (call == null)
             {
                 return NotFound();
@@ -147,19 +95,14 @@ namespace CallsCRM.Controllers
         }
 
         // POST: Call/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("Delete/{id}/{customerId}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, int customerId)
         {
-            var call = await _context.Calls.SingleOrDefaultAsync(m => m.CallerId == id);
+            var call = await _context.Calls.SingleOrDefaultAsync(m => m.CallerId == id && m.CustomerId == customerId);
             _context.Calls.Remove(call);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool CallExists(int id)
-        {
-            return _context.Calls.Any(e => e.CallerId == id);
         }
     }
 }

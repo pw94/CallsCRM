@@ -61,7 +61,11 @@ namespace CallsCRM.Models
 
     public class CallTime
     {
-        public CallTime() { }
+        public CallTime()
+        {
+            this.StartTime = DateTime.Now;
+            this.EndTime = DateTime.Now;
+        }
         
         public CallTime(DateTime StartTime, DateTime EndTime)
         {
@@ -71,6 +75,7 @@ namespace CallsCRM.Models
 
         public DateTime StartTime { get; protected set; }
         public DateTime EndTime { get; protected set; }
+        [DisplayFormat(DataFormatString = "{0:F2}")]
         public double Duration => EndTime.Subtract(StartTime).TotalSeconds;
         public bool Success => StartTime != EndTime;
         public override bool Equals(object obj)
