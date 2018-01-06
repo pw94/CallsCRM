@@ -73,6 +73,8 @@ namespace CallsCRM.Migrations
                 name: "IX_Calls_CustomerId",
                 table: "Calls",
                 column: "CustomerId");
+            
+            migrationBuilder.Sql("INSERT INTO Callers (LastName, Login, Name) VALUES ('Surname', 'default', 'Name');");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
