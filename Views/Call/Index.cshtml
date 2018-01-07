@@ -33,8 +33,8 @@
                 @Html.DisplayFor(modelItem => item.Time.StartTime)
             </td>
             <td>
-                @Html.ActionLink("Details", "Details", new { id = item.CallerId, customerId = item.CustomerId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.CallerId, customerId = item.CustomerId })
+                @Html.ActionLink("Details", "Details", new { id = item.CallId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.CallId })
             </td>
         </tr>
 }

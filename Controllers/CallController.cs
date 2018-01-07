@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CallsCRM.Models;
+using CallsCRM.Strategy;
 
 namespace CallsCRM.Controllers
 {
     public class CallController : Controller
     {
         private readonly CustomerContext _context;
+        private readonly ICallStrategy _callStrategy;
 
-        public CallController(CustomerContext context)
+        public CallController(CustomerContext context, ICallStrategy callStrategy)
         {
             _context = context;
+            _callStrategy = callStrategy;
         }
 
         // GET: Call
@@ -26,10 +29,9 @@ namespace CallsCRM.Controllers
         }
 
         // GET: Call/Details/5
-        [HttpGet("Details/{id}/{customerId}")]
-        public async Task<IActionResult> Details(int? id, int? customerId)
+        public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || customerId == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -37,7 +39,7 @@ namespace CallsCRM.Controllers
             var call = await _context.Calls
                 .Include(c => c.Callee)
                 .Include(c => c.Caller)
-                .SingleOrDefaultAsync(m => m.CallerId == id && m.CustomerId == customerId);
+                .SingleOrDefaultAsync(m => m.CallId == id);
             if (call == null)
             {
                 return NotFound();
@@ -61,7 +63,7 @@ namespace CallsCRM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomerId,CallerId")] Call call)
         {
-            call.Time = new CallTime();
+            call.Time = new CallTime(DateTime.Now, _callStrategy.Call());
             if (ModelState.IsValid)
             {
                 _context.Add(call);
@@ -74,10 +76,9 @@ namespace CallsCRM.Controllers
         }
 
         // GET: Call/Delete/5
-        [HttpGet("Delete/{id}/{customerId}")]
-        public async Task<IActionResult> Delete(int? id, int? customerId)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || customerId == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -85,7 +86,7 @@ namespace CallsCRM.Controllers
             var call = await _context.Calls
                 .Include(c => c.Callee)
                 .Include(c => c.Caller)
-                .SingleOrDefaultAsync(m => m.CallerId == id && m.CustomerId == customerId);
+                .SingleOrDefaultAsync(m => m.CallId == id);
             if (call == null)
             {
                 return NotFound();
@@ -95,11 +96,11 @@ namespace CallsCRM.Controllers
         }
 
         // POST: Call/Delete/5
-        [HttpPost("Delete/{id}/{customerId}")]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id, int customerId)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var call = await _context.Calls.SingleOrDefaultAsync(m => m.CallerId == id && m.CustomerId == customerId);
+            var call = await _context.Calls.SingleOrDefaultAsync(m => m.CallId == id);
             _context.Calls.Remove(call);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

@@ -14,7 +14,7 @@ namespace CallsCRM.Models
         public DbSet<Call> Calls { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Call>().HasKey(c => new { c.CallerId, c.CustomerId });
+            modelBuilder.Entity<Call>().HasKey(c => c.CallId);
             modelBuilder.Entity<Call>().HasOne(c => c.Callee).WithMany(cu => cu.Calls).HasForeignKey(c => c.CustomerId);
             modelBuilder.Entity<Call>().HasOne(c => c.Caller).WithMany(ca => ca.Calls).HasForeignKey(c => c.CallerId);
             modelBuilder.Entity<Call>().OwnsOne(c => c.Time);
@@ -53,6 +53,7 @@ namespace CallsCRM.Models
 
     public class Call
     {
+        public int CallId { get; set; }
         public CallTime Time { get; set; }
         public int CustomerId { get; set; }
         public Customer Callee { get; set; }
@@ -75,10 +76,14 @@ namespace CallsCRM.Models
         }
 
         public DateTime StartTime { get; protected set; }
+
         public DateTime EndTime { get; protected set; }
+        
         [DisplayFormat(DataFormatString = "{0:F2}")]
         public double Duration => EndTime.Subtract(StartTime).TotalSeconds;
-        public bool Success => StartTime != EndTime;
+        
+        public bool Success => StartTime.TrimMilliseconds() != EndTime.TrimMilliseconds();
+        
         public override bool Equals(object obj)
         {
             var callTime = obj as CallTime;
@@ -90,6 +95,7 @@ namespace CallsCRM.Models
 
             return StartTime.Equals(callTime.StartTime) && EndTime.Equals(callTime.EndTime);
         }
+        
         public override int GetHashCode()
         {
             return StartTime.GetHashCode() ^ EndTime.GetHashCode();

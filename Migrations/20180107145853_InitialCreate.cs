@@ -47,6 +47,8 @@ namespace CallsCRM.Migrations
                 name: "Calls",
                 columns: table => new
                 {
+                    CallId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CallerId = table.Column<int>(nullable: false),
                     CustomerId = table.Column<int>(nullable: false),
                     Time_EndTime = table.Column<DateTime>(nullable: false),
@@ -54,7 +56,7 @@ namespace CallsCRM.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Calls", x => new { x.CallerId, x.CustomerId });
+                    table.PrimaryKey("PK_Calls", x => x.CallId);
                     table.ForeignKey(
                         name: "FK_Calls_Callers_CallerId",
                         column: x => x.CallerId,
@@ -68,6 +70,11 @@ namespace CallsCRM.Migrations
                         principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Calls_CallerId",
+                table: "Calls",
+                column: "CallerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Calls_CustomerId",

@@ -11,7 +11,7 @@ using System;
 namespace CallsCRM.Migrations
 {
     [DbContext(typeof(CustomerContext))]
-    [Migration("20171225231116_InitialCreate")]
+    [Migration("20180107145853_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,11 +23,16 @@ namespace CallsCRM.Migrations
 
             modelBuilder.Entity("CallsCRM.Models.Call", b =>
                 {
+                    b.Property<int>("CallId")
+                        .ValueGeneratedOnAdd();
+
                     b.Property<int>("CallerId");
 
                     b.Property<int>("CustomerId");
 
-                    b.HasKey("CallerId", "CustomerId");
+                    b.HasKey("CallId");
+
+                    b.HasIndex("CallerId");
 
                     b.HasIndex("CustomerId");
 
@@ -94,9 +99,7 @@ namespace CallsCRM.Migrations
 
                     b.OwnsOne("CallsCRM.Models.CallTime", "Time", b1 =>
                         {
-                            b1.Property<int>("CallerId");
-
-                            b1.Property<int>("CallCustomerId");
+                            b1.Property<int>("CallId");
 
                             b1.Property<DateTime>("EndTime");
 
@@ -106,7 +109,7 @@ namespace CallsCRM.Migrations
 
                             b1.HasOne("CallsCRM.Models.Call")
                                 .WithOne("Time")
-                                .HasForeignKey("CallsCRM.Models.CallTime", "CallerId", "CallCustomerId")
+                                .HasForeignKey("CallsCRM.Models.CallTime", "CallId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
                 });
