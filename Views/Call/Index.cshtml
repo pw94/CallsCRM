@@ -17,6 +17,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Time)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Time.Success)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -31,6 +34,16 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Time.StartTime)
+            </td>
+            <td>
+                @if (item.Time.Success)
+                {
+                    <p>&#x2714;</p>
+                }
+                else
+                {
+                    <p title="Next call: @item.NextCall">&#x2718;</p>
+                }
             </td>
             <td>
                 @Html.ActionLink("Details", "Details", new { id = item.CallId }) |

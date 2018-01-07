@@ -11,17 +11,20 @@ namespace CallsCRM.Models
         public int CallerId { get; set; }
         public Caller Caller { get; set; }
 
-        public DateTime PredictNext()
+        public DateTime NextCall
         {
-            var time = Time.StartTime.AddDaysAfterNow();
-            if (time.IsWeekend())
-                time = time.AddDays(2);
-            else if (time.IsMorning())
-                time = time.AddHours(7);
-            else
-                time = time.AddHours(-7).AddDaysToSaturday();
+            get
+            {
+                var time = Time.StartTime.AddDaysAfterNow();
+                if (time.IsWeekend())
+                    time = time.AddDays(2);
+                else if (time.IsMorning())
+                    time = time.AddHours(7);
+                else
+                    time = time.AddHours(-7).AddDaysToSaturday();
 
-            return time;
+                return time;
+            }
         }
     }
 }

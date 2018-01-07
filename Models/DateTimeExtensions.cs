@@ -22,7 +22,7 @@ namespace CallsCRM.Models
 
         public static DateTime AddDaysAfterNow(this DateTime dt)
         {
-            var diff = (DateTime.Now - dt).TotalDays;
+            var diff = Math.Floor((DateTime.Now - dt).TotalDays);
             var date = dt.AddDays(diff+1);
             if (dt.IsWeekend())
                 date = date.AddDaysToSaturday();
