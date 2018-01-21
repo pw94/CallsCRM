@@ -57,8 +57,12 @@ namespace CallsCRM.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
+                if (_context.Customers.All(c => c.Email != customer.Email)
+                    && _context.Customers.All(c => c.PhoneNumber != customer.PhoneNumber))
+                {
+                    _context.Add(customer);
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(customer);
@@ -94,6 +98,11 @@ namespace CallsCRM.Controllers
 
             if (ModelState.IsValid)
             {
+                if (_context.Customers.Any(c => c.Email == customer.Email)
+                    || _context.Customers.Any(c => c.PhoneNumber == customer.PhoneNumber))
+                {
+                    return RedirectToAction(nameof(Index));
+                }
                 try
                 {
                     _context.Update(customer);

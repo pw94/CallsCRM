@@ -55,7 +55,7 @@ namespace CallsCRM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CallerId,Login,Name,LastName")] Caller caller)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && _context.Callers.All(c => c.Login != caller.Login))
             {
                 _context.Add(caller);
                 await _context.SaveChangesAsync();
@@ -92,7 +92,7 @@ namespace CallsCRM.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && _context.Callers.All(c => c.Login != caller.Login))
             {
                 try
                 {
