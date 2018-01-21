@@ -16,7 +16,8 @@ namespace CallsCRM.Models
             modelBuilder.Entity<Call>().HasOne(c => c.Caller).WithMany(ca => ca.Calls).HasForeignKey(c => c.CallerId);
             modelBuilder.Entity<Call>().OwnsOne(c => c.Time);
 
-            modelBuilder.Entity<Customer>().HasIndex(cu => new { cu.PhoneNumber, cu.Email }).IsUnique();
+            modelBuilder.Entity<Customer>().HasIndex(cu => cu.PhoneNumber).IsUnique();
+            modelBuilder.Entity<Customer>().HasIndex(cu => cu.Email).IsUnique();
 
             modelBuilder.Entity<Caller>().HasIndex(ca => ca.Login).IsUnique();
         }
