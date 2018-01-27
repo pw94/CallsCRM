@@ -15,13 +15,14 @@ namespace CallsCRM.Models
         {
             get
             {
+                const short DAYS_IN_WEEKEND = 2, DAYS_IN_WEEK = 7;
                 var time = Time.StartTime.AddDaysAfterNow();
                 if (time.IsWeekend())
-                    time = time.AddDays(2);
+                    time = time.AddDays(DAYS_IN_WEEKEND);
                 else if (time.IsMorning())
-                    time = time.AddHours(7);
+                    time = time.AddHours(DAYS_IN_WEEK);
                 else
-                    time = time.AddHours(-7).AddDaysToSaturday();
+                    time = time.AddHours(-DAYS_IN_WEEK).AddDaysToSaturday();
 
                 return time;
             }

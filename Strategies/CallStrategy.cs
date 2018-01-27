@@ -6,8 +6,9 @@ namespace CallsCRM.Strategy
     {
         public DateTime Call()
         {
-            var rnd = new Random().Next(100);
-            return rnd < 20 ? DateTime.Now : DateTime.Now.AddSeconds(rnd * 0.6);
+            const int TOTAL_PERCENTAGES = 100, MINIMUM_PERCENTAGE = 20;
+            var rnd = new Random().Next(TOTAL_PERCENTAGES);
+            return rnd < MINIMUM_PERCENTAGE ? DateTime.Now : DateTime.Now.AddSeconds(rnd * 0.6);
         }
     }
 }
