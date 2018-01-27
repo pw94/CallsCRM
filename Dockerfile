@@ -1,4 +1,4 @@
-FROM microsoft/aspnetcore-build:lts
+FROM microsoft/aspnetcore-build:2.0
 COPY . /app
 WORKDIR /app
 RUN ["dotnet", "restore"]
