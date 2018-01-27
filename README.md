@@ -1,2 +1,2 @@
 # CallsCRM
-Application in ASP.NET Core MVC with EF Core
+Application was created in ASP.NET Core MVC with EF Core
